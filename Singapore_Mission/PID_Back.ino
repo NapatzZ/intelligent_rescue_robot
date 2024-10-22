@@ -2,7 +2,7 @@ void backward(int BaseSpeed, float Kp, float Ki, float Kd) {
   int8_t integral = 0;
   int8_t output = 0;
   int last_error = 0;
-  while (sensor_back(0)==0 || sensor_back(2)==0 ||sensor_back(4)==0 ||sensor_back(6)==0 ) {
+  while (sensor_back(0) == 0 || sensor_back(2) == 0 || sensor_back(4) == 0 || sensor_back(6) == 0) {
     int error = Position_back() - setpoint_front;
     integral += error;
     integral = constrain(integral, -100, 100);
@@ -10,10 +10,27 @@ void backward(int BaseSpeed, float Kp, float Ki, float Kd) {
     last_error = error;
     leftmotor = -BaseSpeed + output;
     rightmotor = -BaseSpeed - output;
-    leftmotor = constrain(leftmotor, -100, 100);
-    rightmotor = constrain(rightmotor, -100, 100);
+    leftmotor = constrain(leftmotor, -70, 70);
+    rightmotor = constrain(rightmotor, -70, 70);
     Motor(leftmotor, rightmotor);
   }
-      AO();
-    sleep(500);
+  Motor(-40, -40);
+  delay(100);
+  calibate_back();
+  delay(100);
+}
+void calibate_back() {
+  if (sensor_back(1) == 1 || sensor_back(2) == 1) {
+    while (sensor_back(3) == 0 && sensor_back(4) == 0) {
+      Motor(-30, 30);
+    }
+    delay(50);
+    AO();
+  } if (sensor_back(5) == 1 || sensor_back(6) == 1) {
+    while (sensor_back(3) == 0 && sensor_back(4) == 0) {
+      Motor(30, -30);
+    }
+    delay(50);
+    AO();
+  }
 }

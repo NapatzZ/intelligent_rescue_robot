@@ -6,7 +6,7 @@ void turn_left() {
     Motor(-turn_speed, turn_speed);
   }
     AO();
-    sleep(200);
+    sleep(100);
 }
 
 void turn_right() {
@@ -18,5 +18,5 @@ void turn_right() {
   }
 
     AO();
-    sleep(200);
+    sleep(100);
 }

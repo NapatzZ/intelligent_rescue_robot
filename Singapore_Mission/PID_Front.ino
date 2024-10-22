@@ -2,7 +2,7 @@ void forward_ultra(int BaseSpeed, float Kp, float Ki, float Kd) {
   int8_t integral = 0;
   int output = 0;
   int last_error = 0;
-  while (27.86 / ((analog(6) * (5.0 / 1023.0)) - 0.1) > 4) { 
+  while (27.86 / ((analog(6) * (5.0 / 1023.0)) - 0.1) > 2.13) {
     int error = Position_front() - setpoint_front;
     integral += error;
     integral = constrain(integral, -100, 100);
@@ -10,20 +10,21 @@ void forward_ultra(int BaseSpeed, float Kp, float Ki, float Kd) {
     last_error = error;
     leftmotor = BaseSpeed + output;
     rightmotor = BaseSpeed - output;
-    leftmotor = constrain(leftmotor, -100, 100);
-    rightmotor = constrain(rightmotor, -100, 100);
+    leftmotor = constrain(leftmotor, -70, 70);
+    rightmotor = constrain(rightmotor, -70, 70);
     Motor(leftmotor, rightmotor);
   }
-  sleep(50);
   AO();
   sleep(100);
+  calibate_IR();
+  delay(200);
 }
 
 void forward(int BaseSpeed, float Kp, float Ki, float Kd) {
   int integral = 0;
   int output = 0;
   int last_error = 0;
-  while (sensor_front(0) == 0 || sensor_front(2) == 0 || sensor_front(4) == 0) { 
+  while (!(sensor_front(0) == 1 && sensor_front(1) == 1 && sensor_front(2) == 1 && sensor_front(3) == 1 && sensor_front(4) == 1)) {
     int error = Position_front() - setpoint_front;
     integral += error;
     integral = constrain(integral, -100, 100);
@@ -31,11 +32,62 @@ void forward(int BaseSpeed, float Kp, float Ki, float Kd) {
     last_error = error;
     leftmotor = BaseSpeed + output;
     rightmotor = BaseSpeed - output;
-    leftmotor = constrain(leftmotor, -100, 100);
-    rightmotor = constrain(rightmotor, -100, 100);
+    leftmotor = constrain(leftmotor, -70, 70);
+    rightmotor = constrain(rightmotor, -70, 70);
     Motor(leftmotor, rightmotor);
   }
-  sleep(50);
+  Motor(40, 40);
+  sleep(80);
+  calibate();
   AO();
   sleep(100);
+}
+void forward_millis(int BaseSpeed, float Kp, float Ki, float Kd, float duration) {
+  int integral = 0;
+  int output = 0;
+  int last_error = 0;
+  long time = millis();
+  while ((millis() - time) < duration) {
+    int error = Position_front() - setpoint_front;
+    integral += error;
+    integral = constrain(integral, -100, 100);
+    output = (error * Kp) + (integral * Ki) + ((error - last_error) * Kd);
+    last_error = error;
+    leftmotor = BaseSpeed + output;
+    rightmotor = BaseSpeed - output;
+    leftmotor = constrain(leftmotor, -70, 70);
+    rightmotor = constrain(rightmotor, -70, 70);
+    Motor(leftmotor, rightmotor);
+  }
+  sleep(100);
+  AO();
+  sleep(100);
+}
+void calibate() {
+  if (sensor_front(0) == 1 || sensor_front(1) == 1) {
+    while (sensor_front(2) == 0) {
+      Motor(-30, 30);
+    }
+    delay(50);
+  }
+  if (sensor_front(4) == 1 || sensor_front(3) == 1) {
+    while (sensor_front(2) == 0) {
+      Motor(30, -30);
+    }
+    delay(50);
+  }
+}
+void calibate_IR() {
+  if (27.86 / ((analog(6) * (5.0 / 1023.0)) - 0.1) > 2.2) {
+    while ((27.86 / ((analog(6) * (5.0 / 1023.0)) - 0.1) < 2.1) && 27.86 / ((analog(6) * (5.0 / 1023.0)) - 0.1) > 1.95) {
+      Motor(20, 20);
+    }
+    AO();
+
+  } else if (27.86 / ((analog(6) * (5.0 / 1023.0)) - 0.1) < 1.9) {
+    while ((27.86 / ((analog(6) * (5.0 / 1023.0)) - 0.1) < 2.1) && 27.86 / ((analog(6) * (5.0 / 1023.0)) - 0.1) > 1.95) {
+      Motor(-20, -20);
+    }
+    AO();
+  }
 }

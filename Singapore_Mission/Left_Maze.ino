@@ -26,11 +26,12 @@ void SimpleLeft(float Kp,float Ki,float Kd) {
         AO();
         sleep(200);
         Motor(-turn_speed, -turn_speed);
-        delay(200);
+        delay(220);
         AO();
         delay(200);
         Motor(turn_speed, -turn_speed);
-        delay(240);
+        delay(260);
+        AO();
       } else if (left_distance > 6) {  // ใกล้กับผนังด้านซ้ายมาก
         Motor(10, base_speed_left);     // มอเตอร์ซ้ายจะเพิ่มความเร็ว
         delay(30);
@@ -42,8 +43,8 @@ void SimpleLeft(float Kp,float Ki,float Kd) {
         last_error = error;
         leftmotor = base_speed_left - output;
         rightmotor = base_speed_left + output;
-        leftmotor = constrain(leftmotor, -100, 100);
-        rightmotor = constrain(rightmotor, -100, 100);
+        leftmotor = constrain(leftmotor, -60, 50);
+        rightmotor = constrain(rightmotor, -60, 50);
         Motor(leftmotor, rightmotor);
       }
     }

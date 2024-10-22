@@ -1,5 +1,5 @@
-uint8_t BASE_SPEED = 60;
-float KP_F = 0.13, KI_F = 0, KD_F = 4, KP_B = 0.13, KI_B = 0, KD_B = 4;
+uint8_t BASE_SPEED = 40;
+float KP_F = 0.4, KI_F = 0.00001, KD_F = 90, KP_B = 0.4, KI_B = 0.00001, KD_B = 90;
 
 typedef struct {
   uint8_t x;
@@ -296,25 +296,25 @@ void move(Point previous, Point current) {
   // Non-debug mode: actual movement happens here
   if (current.x > previous.x) {  // Moving right
     if (robot_direction == right) {
-      forward(BASE_SPEED, KP_F, KI_F, KD_F);
+      forward(40, KP_F, KI_F, KD_F);
     } else {
       backward(BASE_SPEED, KP_B, KI_B, KD_B);
     }
   } else if (current.x < previous.x) {  // Moving left
     if (robot_direction == left) {
-      forward(BASE_SPEED, KP_F, KI_F, KD_F);
+      forward(40, KP_F, KI_F, KD_F);
     } else {
       backward(BASE_SPEED, KP_B, KI_B, KD_B);
     }
   } else if (current.y > previous.y) {  // Moving down
     if (robot_direction == down) {
-      forward(BASE_SPEED, KP_F, KI_F, KD_F);
+      forward(40, KP_F, KI_F, KD_F);
     } else {
       backward(BASE_SPEED, KP_B, KI_B, KD_B);
     }
   } else if (current.y < previous.y) {  // Moving up
     if (robot_direction == up) {
-      forward(BASE_SPEED, KP_F, KI_F, KD_F);
+      forward(40, KP_F, KI_F, KD_F);
     } else {
       backward(BASE_SPEED, KP_B, KI_B, KD_B);
     }
@@ -368,30 +368,41 @@ void path_calculation(Point start, Point destination, int servo_angle) {
         move(path[i], path[i + 1]);
       }
     }
-
-    // Handle servo movement and finalize.  ก่อนเข้า
-    if (servo_angle == -1) { // <<<<<<<<<<<<<<<<<<<<ตอนจะไปหยิบ
-      servo(1, SERVO_DOWN); //ตอนจะเข้าไปหยิบ มันเอาลงอยู่แก้ให้เป็นขึ้น
+    // Handle servo movement and finalize
+    if (servo_angle == -1) {
+      servo(1, SERVO_UP);
+      delay(200);
       servo(2, SERVO_ARR);
     } else {
-      servo(1, servo_angle); // <<<<<<<<<<<<<<<<<<<<ตอนจะไปปล่อย
+      servo(1, SERVO_UP);
+      delay(500);
       servo(2, SERVO_KEEP);
     }
-
-    forward_ultra(42, KP_F, KI_F, KD_F);
-
-    if (servo_angle == -1) { //           หลังเข้า หลังถึงจุดหยิบแล้ว จะให้ทำอะไรก็เรื่องของมึง
-      servo(2, SERVO_KEEP); // <<<<<<<<<<<<<<<<<<<<ตอนจะไปหยิบ
+    forward_millis(40, KP_F, KI_F, KD_F, 320);
+    forward_ultra(20, KP_F, KI_F, KD_F);
+    if (servo_angle == -1) {
+      servo(1, SERVO_DOWN);
+      delay(500);
+      servo(2, SERVO_KEEP);
       AO();
       sleep(500);
       servo(1, SERVO_UP);
-    } else { // <<<<<<<<<<<<<<<<<<<<ตอนจะไปปล่อย
+     sound(3000,500);
+    } else {
+      calibate_IR();
+      delay(200);
+      calibate();
+      delay(100);
+      AO();
+      servo(1, SERVO_DOWN);
+      delay(500);
       servo(2, SERVO_ARR);
       AO();
-      sleep(200);
+      sleep(300);
       servo(1, SERVO_UP);
     }
-
+    AO();
+    delay(200);
     if (path_length >= 2) {
       return_step = path[path_length - 2];
     } else {
@@ -405,11 +416,11 @@ void path_calculation(Point start, Point destination, int servo_angle) {
 
 void return_to_before_position() {
   current_position = return_step;
-  backward(BASE_SPEED, KP_B, KI_B, KD_B);
+  backward(40, KP_B, KI_B, KD_B);
 }
 
 void execute() {
-  int8_t  closest_pickup_index;
+  int8_t closest_pickup_index;
   Point closest_pickup;
   robot_direction = right;
 
@@ -419,21 +430,23 @@ void execute() {
     path_calculation(current_position, closest_pickup, -1);
     current_position = closest_pickup;
     visited_pickups[closest_pickup_index] = 1;
+    AO();
 
 
-   
+
     return_to_before_position();
     read_color(&color);
 
-      oled.textSize(10);
-      oled.text(0,0,"%d   ", color);
-      oled.show();
+    oled.textSize(1);
+    oled.text(0, 0, "%d   ", color);
+    oled.show();
 
     path_calculation(current_position, dropoff_zones[color].dropoff_location, dropoff_zones[color].servo_angle);
     current_position = dropoff_zones[color].dropoff_location;
 
     return_to_before_position();
   }
+  sound(3000, 500);
   path_calculation(current_position, exit_point, -1);
 
   AO();
