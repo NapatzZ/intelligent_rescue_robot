@@ -296,21 +296,21 @@ void move(Point previous, Point current) {
   // Non-debug mode: actual movement happens here
   if (current.x > previous.x) {  // Moving right
     if (robot_direction == right) {
-      forward(40, KP_F, KI_F, KD_F);
+      forward();
     } else {
-      backward(BASE_SPEED, KP_B, KI_B, KD_B);
+      backward();
     }
   } else if (current.x < previous.x) {  // Moving left
     if (robot_direction == left) {
-      forward(40, KP_F, KI_F, KD_F);
+      forward();
     } else {
-      backward(BASE_SPEED, KP_B, KI_B, KD_B);
+      backward();
     }
   } else if (current.y > previous.y) {  // Moving down
     if (robot_direction == down) {
-      forward(40, KP_F, KI_F, KD_F);
+      forward();
     } else {
-      backward(BASE_SPEED, KP_B, KI_B, KD_B);
+      backward();
     }
   } else if (current.y < previous.y) {  // Moving up
     if (robot_direction == up) {
@@ -378,31 +378,19 @@ void path_calculation(Point start, Point destination, int servo_angle) {
       delay(500);
       servo(2, SERVO_KEEP);
     }
-    forward_millis(40, KP_F, KI_F, KD_F, 320);
-    forward_ultra(20, KP_F, KI_F, KD_F);
+
+    forward_millis(20,200);
+    forward_ultra(20);
+
     if (servo_angle == -1) {
-      servo(1, SERVO_DOWN);
-      delay(500);
-      servo(2, SERVO_KEEP);
-      AO();
-      sleep(500);
-      servo(1, SERVO_UP);
-     sound(3000,500);
+      //ขาหยิบ
     } else {
-      calibate_IR();
-      delay(200);
-      calibate();
-      delay(100);
-      AO();
-      servo(1, SERVO_DOWN);
-      delay(500);
-      servo(2, SERVO_ARR);
-      AO();
-      sleep(300);
-      servo(1, SERVO_UP);
+      //ขาวาง
     }
+
     AO();
     delay(200);
+
     if (path_length >= 2) {
       return_step = path[path_length - 2];
     } else {
@@ -415,14 +403,15 @@ void path_calculation(Point start, Point destination, int servo_angle) {
 }
 
 void return_to_before_position() {
+  backward();
+  AO();
+  sleep(300);
   current_position = return_step;
-  backward(40, KP_B, KI_B, KD_B);
 }
 
 void execute() {
   int8_t closest_pickup_index;
   Point closest_pickup;
-  robot_direction = right;
 
   for (uint8_t i = 0; i < NUM_BALLS; i++) {
     find_shortest_pickup(pickup_points, current_position, &closest_pickup, visited_pickups, &closest_pickup_index);
@@ -431,8 +420,6 @@ void execute() {
     current_position = closest_pickup;
     visited_pickups[closest_pickup_index] = 1;
     AO();
-
-
 
     return_to_before_position();
     read_color(&color);

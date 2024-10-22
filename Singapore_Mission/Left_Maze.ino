@@ -7,7 +7,7 @@ void SimpleLeft(float Kp,float Ki,float Kd) {
   while (1) {
     right_distance = 27.86 / ((analog(RIGHT_ULTRASONIC_PIN) * (5.0 / 1023.0)) - 0.1);
     left_distance = 27.86 / ((analog(LEFT_ULTRASONIC_PIN) * (5.0 / 1023.0)) - 0.1);
-    front_distance = (analog(8) / 41);
+    front_distance = (analog(FRONT_ULTRASONIC_PIN) / 41);
 
     // ตรวจสอบค่า analog(0)
 

@@ -6,6 +6,7 @@
 //PIN DEFINE
 #define LEFT_ULTRASONIC_PIN 5
 #define FRONT_ULTRASONIC_PIN 8
+#define FRONT_INFARED_PIN 6
 #define RIGHT_ULTRASONIC_PIN 7
 //BALL COLLECTING AREA DEFINE
 #define START_POSITION  { 0, 2 }
@@ -60,7 +61,7 @@ int last_position = 0;  // เก็บตำแหน่งเส้นล่�
 int error = 0;
 int8_t leftmotor;
 int8_t rightmotor;
-int8_t turn_speed = 40;
+int8_t turn_speed = 20;
 int8_t close_wall_distance = 7;
 int8_t color;
 //ENUM
