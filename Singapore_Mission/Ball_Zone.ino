@@ -58,7 +58,6 @@ uint8_t parent[WIDTH * HEIGHT];
 Point path[WIDTH * HEIGHT];
 
 // Function Implementations
-
 void enqueue(Queue *q, Point pos) {
   if ((q->rear + 1) % QUEUE_SIZE == q->front) {
     // Queue is full
@@ -290,7 +289,7 @@ void move(Point previous, Point current) {
   }
 
   oled.show();  // Update the OLED screen with the new information
-  delay(1000);  // Delay for 20 seconds before the next step
+  delay(1000);  
 
 #else
   // Non-debug mode: actual movement happens here
@@ -367,6 +366,9 @@ void path_calculation(Point start, Point destination, int servo_angle) {
       if (i != path_length - 2) {
         move(path[i], path[i + 1]);
       }
+    }
+    if (servo_angle == -2){
+      return;
     }
     // Handle servo movement and finalize
     if (servo_angle == -1) {
@@ -450,13 +452,7 @@ void execute() {
   }
   AO();
   sound(3000, 500);
-  // path_calculation(current_position, exit_point, -1);
+  path_calculation(current_position, exit_point, -2);
 
-  // AO();
-  // sleep(300);
-  while (1) {
-    oled.text(0, 0, "%d  %d ", current_position.x, current_position.y);
-    oled.text(1, 0, "%d  %d ", exit_point.x, exit_point.y);
-    oled.show();
-  }
+
 }

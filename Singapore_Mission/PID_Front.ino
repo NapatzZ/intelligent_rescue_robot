@@ -2,7 +2,7 @@ void forward_ultra(int BaseSpeed, float Kp, float Ki, float Kd) {
   int8_t integral = 0;
   int output = 0;
   int last_error = 0;
-  while (27.86 / ((analog(6) * (5.0 / 1023.0)) - 0.1) > 2.15) {
+  while (27.86 / ((analog(FRONT_INFARED_PIN) * (5.0 / 1023.0)) - 0.1) > 2.15) {
     int error = Position_front() - setpoint_front;
     integral += error;
     integral = constrain(integral, -100, 100);
@@ -81,14 +81,14 @@ void calibate() {
   }
 }
 void calibate_IR() {
-  if (27.86 / ((analog(6) * (5.0 / 1023.0)) - 0.1) > 2.2) {
-    while ((27.86 / ((analog(6) * (5.0 / 1023.0)) - 0.1) < 2.1) && 27.86 / ((analog(6) * (5.0 / 1023.0)) - 0.1) > 1.95) {
+  if (27.86 / ((analog(FRONT_INFARED_PIN) * (5.0 / 1023.0)) - 0.1) > 2.2) {
+    while ((27.86 / ((analog(FRONT_INFARED_PIN) * (5.0 / 1023.0)) - 0.1) < 2.1) && 27.86 / ((analog(FRONT_INFARED_PIN) * (5.0 / 1023.0)) - 0.1) > 1.95) {
       Motor(20, 20);
     }
     AO();
 
-  } else if (27.86 / ((analog(6) * (5.0 / 1023.0)) - 0.1) < 1.9) {
-    while ((27.86 / ((analog(6) * (5.0 / 1023.0)) - 0.1) < 2.1) && 27.86 / ((analog(6) * (5.0 / 1023.0)) - 0.1) > 1.95) {
+  } else if (27.86 / ((analog(FRONT_INFARED_PIN) * (5.0 / 1023.0)) - 0.1) < 1.9) {
+    while ((27.86 / ((analog(FRONT_INFARED_PIN) * (5.0 / 1023.0)) - 0.1) < 2.1) && 27.86 / ((analog(FRONT_INFARED_PIN) * (5.0 / 1023.0)) - 0.1) > 1.95) {
       Motor(-20, -20);
     }
     AO();

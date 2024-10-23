@@ -7,7 +7,7 @@ void SimpleRight(float Kp, float Ki, float Kd) {
   while (1) {
     right_distance = 27.86 / ((analog(RIGHT_ULTRASONIC_PIN) * (5.0 / 1023.0)) - 0.1);  //convert to .5 float
     left_distance = 27.86 / ((analog(LEFT_ULTRASONIC_PIN) * (5.0 / 1023.0)) - 0.1);    //convert to .5 float
-    front_distance = (analog(8) / 41);
+    front_distance = (analog(FRONT_ULTRASONIC_PIN) / 41);
 
     if (in_range(0) && in_range(1) && in_range(2) && in_range(3) && in_range(4)) {
       if (checkStartTime == 0) {
