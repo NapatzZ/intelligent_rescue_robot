@@ -16,25 +16,27 @@ void setup() {
   delay(500);
   oled.mode(0);
   robot_direction = right;
-  execute();
-  //SimpleLeft(0.36,0,9.6);
- // SimpleRight(0.34,0,15.4);
- //forward_ultra(40, 0.5, 0.00001, 70);
+   //forward(55,0.3,0,220);
+   execute();
+//   SimpleLeft(0.36,0,9.6);
+//  SimpleRight(0.34,0,15.4);
+//  forward_ultra(40, 0.5, 0.00001, 70);
 // backward(40, 0.43, 0, 90);
- //forward(45, 0.5, 0.00001, 70);
- //forward_millis(40 , 0.5, 0.00001, 70, 460);
+  //forward(60, 0.5, 0.00001, 70);
+//  forward_millis(40 , 0.5, 0.00001, 70, 460);
 }
 
 void loop() {
+    Serial.println(Position_front());
   // oled.text(0,0,"%d   ",knob(180));
   // servo(1,knob(180));
   // oled.show();
   // AO();
-  oled.text(0, 0, "%f   ", 27.86 / (analog(LEFT_ULTRASONIC_PIN) * (5.0 / 1023.0)) - 0.1);
-  oled.text(1, 0, "%f   ", 27.86 / (analog(RIGHT_ULTRASONIC_PIN) * (5.0 / 1023.0)) - 0.1);
-  oled.text(2, 0, "%f   ", 27.86 / (analog(6) * (5.0 / 1023.0)) - 0.1);
-  oled.text(3, 0, "%d   ", analog(8) / 41);
-  oled.show();
+  // oled.text(0, 0, "%f   ", 27.86 / (analog(LEFT_ULTRASONIC_PIN) * (5.0 / 1023.0)) - 0.1);
+  // oled.text(1, 0, "%f   ", 27.86 / (analog(RIGHT_ULTRASONIC_PIN) * (5.0 / 1023.0)) - 0.1);
+  // oled.text(2, 0, "%f   ", 27.86 / (analog(6) * (5.0 / 1023.0)) - 0.1);
+  // oled.text(3, 0, "%d   ", analog(8) / 41);
+  // oled.show();
   //Motor(base_speed_left,base_speed_left);
   //for(int i = 0; i< 5 ; i++ )
 

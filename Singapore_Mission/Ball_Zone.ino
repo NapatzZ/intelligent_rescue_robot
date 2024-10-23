@@ -1,5 +1,5 @@
 uint8_t BASE_SPEED = 40;
-float KP_F = 0.4, KI_F = 0.00001, KD_F = 90, KP_B = 0.4, KI_B = 0.00001, KD_B = 90;
+float KP_F = 0.38, KI_F = 0, KD_F = 100, KP_B = 0.45, KI_B = 0, KD_B = 120;
 
 typedef struct {
   uint8_t x;
@@ -296,21 +296,21 @@ void move(Point previous, Point current) {
   // Non-debug mode: actual movement happens here
   if (current.x > previous.x) {  // Moving right
     if (robot_direction == right) {
-      forward();
+      forward(40, KP_F, KI_F, KD_F);
     } else {
-      backward();
+      backward(BASE_SPEED, KP_B, KI_B, KD_B);
     }
   } else if (current.x < previous.x) {  // Moving left
     if (robot_direction == left) {
-      forward();
+      forward(40, KP_F, KI_F, KD_F);
     } else {
-      backward();
+      backward(BASE_SPEED, KP_B, KI_B, KD_B);
     }
   } else if (current.y > previous.y) {  // Moving down
     if (robot_direction == down) {
-      forward();
+      forward(40, KP_F, KI_F, KD_F);
     } else {
-      backward();
+      backward(BASE_SPEED, KP_B, KI_B, KD_B);
     }
   } else if (current.y < previous.y) {  // Moving up
     if (robot_direction == up) {
@@ -378,19 +378,33 @@ void path_calculation(Point start, Point destination, int servo_angle) {
       delay(500);
       servo(2, SERVO_KEEP);
     }
-
-    forward_millis(20,200);
-    forward_ultra(20);
-
+    forward_millis(30, KP_F, KI_F, KD_F, 300);
+    forward_ultra(20, KP_F, KI_F, KD_F);
     if (servo_angle == -1) {
-      //ขาหยิบ
+      servo(1, SERVO_DOWN);
+      delay(500);
+      servo(2, SERVO_KEEP);
+      AO();
+      sleep(300);
+      servo(1, SERVO_UP);
+      sound(3000, 500);
+      AO();
     } else {
-      //ขาวาง
+      calibate_IR();
+      delay(200);
+      calibate();
+      delay(100);
+      AO();
+      servo(1, SERVO_DOWN);
+      delay(500);
+      servo(2, SERVO_ARR);
+      AO();
+      sleep(300);
+      servo(1, SERVO_UP);
+      AO();
     }
-
     AO();
     delay(200);
-
     if (path_length >= 2) {
       return_step = path[path_length - 2];
     } else {
@@ -398,20 +412,19 @@ void path_calculation(Point start, Point destination, int servo_angle) {
     }
 
   } else {
-    // No valid path found
+    AO();
   }
 }
 
 void return_to_before_position() {
-  backward();
-  AO();
-  sleep(300);
   current_position = return_step;
+  backward(40, KP_B, KI_B, KD_B);
 }
 
 void execute() {
   int8_t closest_pickup_index;
   Point closest_pickup;
+  robot_direction = right;
 
   for (uint8_t i = 0; i < NUM_BALLS; i++) {
     find_shortest_pickup(pickup_points, current_position, &closest_pickup, visited_pickups, &closest_pickup_index);
@@ -420,6 +433,8 @@ void execute() {
     current_position = closest_pickup;
     visited_pickups[closest_pickup_index] = 1;
     AO();
+
+
 
     return_to_before_position();
     read_color(&color);
@@ -433,9 +448,15 @@ void execute() {
 
     return_to_before_position();
   }
-  sound(3000, 500);
-  path_calculation(current_position, exit_point, -1);
-
   AO();
-  sleep(300);
+  sound(3000, 500);
+  // path_calculation(current_position, exit_point, -1);
+
+  // AO();
+  // sleep(300);
+  while (1) {
+    oled.text(0, 0, "%d  %d ", current_position.x, current_position.y);
+    oled.text(1, 0, "%d  %d ", exit_point.x, exit_point.y);
+    oled.show();
+  }
 }
