@@ -23,7 +23,7 @@ void SimpleLeft(float Kp,float Ki,float Kd) {
         AO();
         sleep(200);
         Motor(-turn_speed, -turn_speed);
-        delay(300);
+        delay(350);
         AO();
         delay(200);
         Motor(turn_speed, -turn_speed);
@@ -48,7 +48,5 @@ void SimpleLeft(float Kp,float Ki,float Kd) {
   }
   AO();
   delay(100);
-  Motor(leftmotor, rightmotor);
-  delay(200);
-  AO();
+
 }

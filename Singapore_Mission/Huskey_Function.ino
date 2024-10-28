@@ -4,7 +4,7 @@ void read_color(uint8_t *color_choice) {
     AO();                                                // Stop motors while waiting for color detection
     if (huskylens.requestBlocks()) {                     // Request all blocks from HuskyLens
       if (huskylens.countBlocks() > 0) {                 // Check if there are any detected blocks
-        HUSKYLENSResult result = huskylens.getBlock(0);  // Get the first detected block
+        HUSKYLENSResult result = huskylens.getBlock(0);  // Get the first detected block  
         switch (result.ID) {
           case 1:
             *color_choice = 0;  // Red

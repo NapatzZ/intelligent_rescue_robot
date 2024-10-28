@@ -7,33 +7,30 @@ void setup() {
   delay(10);
   huskylens.begin(Wire);
   delay(10);
-  huskylens.writeAlgorithm(ALGORITHM_COLOR_RECOGNITION);
   waitAnykey_bmp();
-  servo(2,SERVO_ARR);
+  servo(2, SERVO_ARR);
   delay(500);
   servo(1, -1);
   servo(2, -1);
   delay(500);
   oled.mode(0);
   robot_direction = right;
-  //Uturn();
-   //forward(55,0.3,0,220);
- //SimpleLeft(0.35,0,10);
- // SimpleRight(0.28,0,20);
-//find_line();
-forward(50, 0.6, 0, 0.7);
-forward(50, 0.6, 0, 0.7);
-forward(50, 0.6, 0, 0.7);
-turn_left();
-forward(50, 0.6, 0, 0.7);
-turn_right();
-execute();
-forward(50, 0.7, 0, 0.7);
+  SimpleLeft(0.35, 0, 10);
+  cam_line();
+  forward(40, 0.3, 0, 0.2);
+  forward(40, 0.3, 0, 0.2);
+  forward(40, 0.3, 0, 0.2);
+  turn_left();
+  forward(40, 0.6, 0, 0.7);
+  turn_right();
+    huskylens.writeAlgorithm(ALGORITHM_COLOR_RECOGNITION);
+    delay(300);
+  execute();
+  forward(50, 0.7, 0, 0.7);
 }
-
 void loop() {
-  AO();
-    Serial.println(Position_front());
+  // AO();
+  // Serial.println(Position_front());
   // oled.text(0,0,"%d   ",knob(180));
   // servo(1,knob(180));
   // oled.show();
@@ -50,8 +47,8 @@ void loop() {
   // oled.show();
   // forward(60, 0.5, 0, 2.2);
   // backward(60,0.5,0,2.2);*/
-   for (int i = 0; i < 5; i++) {
-    oled.text(i, 0, "%d  | %d        ", sensor_front(i),analog(i));
+  for (int i = 0; i < 5; i++) {
+    oled.text(i, 0, "%d  | %d        ", sensor_front(i), analog(i));
     oled.show();
   }
   // for (int i = 0; i < 8; i++) {

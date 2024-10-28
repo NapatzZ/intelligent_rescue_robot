@@ -23,7 +23,7 @@ void forward(int BaseSpeed, float Kp, float Ki, float Kd) {
   int integral = 0;
   int output = 0;
   int last_error = 0;
-  while (!( sensor_front(1) == 1 && sensor_front(2) == 1 && sensor_front(3) == 1 && sensor_front(4) == 1)) {
+  while (!(sensor_front(1) == 1 && sensor_front(2) == 1 && sensor_front(3) == 1 && sensor_front(4) == 1)) {
     int error = Position_front() - setpoint_front;
     output = (error * Kp) + ((error - last_error) * Kd);
     last_error = error;
