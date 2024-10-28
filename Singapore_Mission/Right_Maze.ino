@@ -40,8 +40,8 @@ void SimpleRight(float Kp, float Ki, float Kd) {
         last_error = error;
         leftmotor = base_speed_right + output;
         rightmotor = base_speed_right - output;
-        leftmotor = constrain(leftmotor, -70, 60);
-        rightmotor = constrain(rightmotor, -70, 60);
+        leftmotor = constrain(leftmotor, -60, 50);
+        rightmotor = constrain(rightmotor, -60, 50);
         Motor(leftmotor, rightmotor);
       }
     }

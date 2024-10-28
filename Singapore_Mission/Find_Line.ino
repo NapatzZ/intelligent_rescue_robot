@@ -1,37 +1,42 @@
 void find_line() {
+    int speedLeft = 40;
+      int speedRight = 40;
+  huskylens.writeAlgorithm(ALGORITHM_LINE_TRACKING);
+  delay(100);
+  if (!huskylens.writeAlgorithm(ALGORITHM_LINE_TRACKING)) {
+    Serial.println("Failed to switch to LINE_TRACKING!");
+    return;
+  }
   AO();
-  servo(1, SERVO_DOWN);
+  servo(1, 85);
   servo(2, SERVO_ARR);
-  sleep(100);
-
+  sleep(300);
   while (true) {
-    if (huskylens.request()) {
-      int numBlocks = huskylens.countBlocks();
-
-      if (numBlocks > 0) {
-        HUSKYLENSResult line = huskylens.getBlock(0);
-        int centerX = line.xCenter;
-        int speedLeft = 100;   //แก้เอง
-        int speedRight = 100;  //แก้เอง
-
-        if (centerX < 160) {
-          speedLeft -= 50;  //แก้เอง
-        } else if (centerX > 160) {
-          speedRight -= 50;  //แก้เอง
-        }
-
-        Motor(speedLeft, speedRight);
-      }
+    if (!huskylens.requestBlocks()) {
+      Serial.println("Failed to request blocks from HuskyLens!");
+      Motor(0, 0);
+      continue;
     }
-
-    if (sensor_front(0) == 1 || sensor_front(1) == 1 || sensor_front(2) == 1 || sensor_front(3) == 1 || sensor_front(4) == 1) {
+    int numBlocks = huskylens.countBlocks();
+    if (numBlocks > 0) {
+      HUSKYLENSResult line = huskylens.getBlock(0);
+      int centerX = line.xCenter;
+      if (centerX < 159) {
+        Motor(speedLeft - 50, speedRight);
+      } else if (centerX > 161) {
+        Motor(speedLeft, speedRight - 50);
+      }
+    } else {
+      Motor(speedLeft, speedRight);
+    }
+    if (sensor_front(0) == 0 || sensor_front(1) == 0 || sensor_front(2) == 0 || sensor_front(3) == 0 || sensor_front(4) == 0) {
       Motor(0, 0);
       break;
     }
-
-    AO();
-    servo(1, SERVO_UP);
-    servo(2, SERVO_KEEP);
-    sleep(100);
+    delay(100);
   }
+  servo(1, SERVO_UP);
+  servo(2, SERVO_KEEP);
+  sleep(100);
+  AO();
 }

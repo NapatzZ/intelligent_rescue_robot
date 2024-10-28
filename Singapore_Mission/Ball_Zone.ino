@@ -1,5 +1,5 @@
 uint8_t BASE_SPEED = 40;
-float KP_F = 0.38, KI_F = 0, KD_F = 100, KP_B = 0.45, KI_B = 0, KD_B = 120;
+float KP_F = 0.7, KI_F = 0, KD_F = 1.2, KP_B = 0.3, KI_B = 0, KD_B = 120;
 
 typedef struct {
   uint8_t x;
@@ -207,7 +207,6 @@ void print_direction_change(Point previous, Point current) {
     switch (robot_direction) {
       case right:
         oled.text(1, 0, "Direction: Left");
-        ;
         break;
       case left: oled.text(1, 0, "Direction: Right"); break;
       case down:
@@ -226,8 +225,7 @@ void print_direction_change(Point previous, Point current) {
       case up: turn_right(); break;
       case down: turn_left(); break;
       case left:
-        turn_left();
-        turn_left();
+        Uturn();
         break;
     }
     robot_direction = right;
@@ -236,8 +234,7 @@ void print_direction_change(Point previous, Point current) {
       case up: turn_left(); break;
       case down: turn_right(); break;
       case right:
-        turn_left();
-        turn_left();
+        Uturn();
         break;
     }
     robot_direction = left;
@@ -246,8 +243,7 @@ void print_direction_change(Point previous, Point current) {
       case right: turn_right(); break;
       case left: turn_left(); break;
       case up:
-        turn_left();
-        turn_left();
+       Uturn();
         break;
     }
     robot_direction = down;
@@ -256,8 +252,7 @@ void print_direction_change(Point previous, Point current) {
       case right: turn_left(); break;
       case left: turn_right(); break;
       case down:
-        turn_left();
-        turn_left();
+        Uturn();
         break;
     }
     robot_direction = up;
@@ -289,7 +284,7 @@ void move(Point previous, Point current) {
   }
 
   oled.show();  // Update the OLED screen with the new information
-  delay(1000);  
+  delay(1000);
 
 #else
   // Non-debug mode: actual movement happens here
@@ -367,7 +362,7 @@ void path_calculation(Point start, Point destination, int servo_angle) {
         move(path[i], path[i + 1]);
       }
     }
-    if (servo_angle == -2){
+    if (servo_angle == -2) {
       return;
     }
     // Handle servo movement and finalize
@@ -380,11 +375,13 @@ void path_calculation(Point start, Point destination, int servo_angle) {
       delay(500);
       servo(2, SERVO_KEEP);
     }
-    forward_millis(30, KP_F, KI_F, KD_F, 300);
-    forward_ultra(20, KP_F, KI_F, KD_F);
+    forward_millis(35, KP_F, KI_F, KD_F, 260);
+    forward_ultra(20, 0.7, KI_F, 0.8);
     if (servo_angle == -1) {
       servo(1, SERVO_DOWN);
       delay(500);
+      read_color(&color);
+       delay(200);
       servo(2, SERVO_KEEP);
       AO();
       sleep(300);
@@ -435,24 +432,15 @@ void execute() {
     current_position = closest_pickup;
     visited_pickups[closest_pickup_index] = 1;
     AO();
-
-
-
     return_to_before_position();
-    read_color(&color);
-
-    oled.textSize(1);
-    oled.text(0, 0, "%d   ", color);
-    oled.show();
-
+    // oled.textSize(1);
+    // oled.text(0, 0, "%d   ", color);
+    // oled.show();
     path_calculation(current_position, dropoff_zones[color].dropoff_location, dropoff_zones[color].servo_angle);
     current_position = dropoff_zones[color].dropoff_location;
-
     return_to_before_position();
   }
   AO();
   sound(3000, 500);
   path_calculation(current_position, exit_point, -2);
-
-
 }

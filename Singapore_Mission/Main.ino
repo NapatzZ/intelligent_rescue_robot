@@ -16,17 +16,23 @@ void setup() {
   delay(500);
   oled.mode(0);
   robot_direction = right;
+  //Uturn();
    //forward(55,0.3,0,220);
-   execute();
-//   SimpleLeft(0.36,0,9.6);
-//  SimpleRight(0.34,0,15.4);
-//  forward_ultra(40, 0.5, 0.00001, 70);
-// backward(40, 0.43, 0, 90);
-  //forward(60, 0.5, 0.00001, 70);
-//  forward_millis(40 , 0.5, 0.00001, 70, 460);
+ //SimpleLeft(0.35,0,10);
+ // SimpleRight(0.28,0,20);
+//find_line();
+forward(50, 0.6, 0, 0.7);
+forward(50, 0.6, 0, 0.7);
+forward(50, 0.6, 0, 0.7);
+turn_left();
+forward(50, 0.6, 0, 0.7);
+turn_right();
+execute();
+forward(50, 0.7, 0, 0.7);
 }
 
 void loop() {
+  AO();
     Serial.println(Position_front());
   // oled.text(0,0,"%d   ",knob(180));
   // servo(1,knob(180));
@@ -44,10 +50,10 @@ void loop() {
   // oled.show();
   // forward(60, 0.5, 0, 2.2);
   // backward(60,0.5,0,2.2);*/
-  // for (int i = 0; i < 5; i++) {
-  //   oled.text(i, 0, "%d  | %d        ", sensor_front(i),analog(i));
-  //   oled.show();
-  // }
+   for (int i = 0; i < 5; i++) {
+    oled.text(i, 0, "%d  | %d        ", sensor_front(i),analog(i));
+    oled.show();
+  }
   // for (int i = 0; i < 8; i++) {
   //   oled.text(i, 0, "%d  | %d        ", adc.read(i));
   //   oled.show();

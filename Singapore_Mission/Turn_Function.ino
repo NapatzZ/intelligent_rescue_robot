@@ -1,5 +1,5 @@
 void turn_left() {
-  delay(200);
+  delay(100);
   while (sensor_front(0) == 1) {
     Motor(-turn_speed, turn_speed);
   }
@@ -14,7 +14,7 @@ void turn_left() {
 }
 
 void turn_right() {
-  delay(200);
+  delay(100);
   while (sensor_front(4) == 1) {
     Motor(turn_speed, -turn_speed);
   }
@@ -27,4 +27,25 @@ void turn_right() {
 
   AO();
   sleep(100);
+}
+void Uturn()
+{
+  while(sensor_front(3) == 1)
+  {
+     Motor(turn_speed, -turn_speed);
+  }
+  while (sensor_front(3) == 0) {
+    Motor(turn_speed, -turn_speed);
+  }
+   while(sensor_front(3) == 1)
+  {
+     Motor(turn_speed, -turn_speed);
+  }
+   while (sensor_front(3) == 0) {
+    Motor(turn_speed, -turn_speed);
+  }
+  while(sensor_front(3) == 1)
+  {
+     Motor(turn_speed, -turn_speed);
+  }
 }
