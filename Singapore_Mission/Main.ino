@@ -16,7 +16,7 @@ void setup() {
   oled.mode(0);
   robot_direction = right;
   SimpleLeft(0.35,0,10);
-  Cam_line(40);
+  Cam_line();
    forward(40,0.35,0,1.2);
    forward(40,0.35,0,1.2);
    forward(40,0.35,0,1.2);

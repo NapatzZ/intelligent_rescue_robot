@@ -1,4 +1,4 @@
-void Cam_line(int Spw) {
+void Cam_line() {
   Motor(30,30);
   delay(100);
   AO();
@@ -27,11 +27,6 @@ void Cam_line(int Spw) {
       delay(300);
       break;
     }
-    // Serial.print(L1);
-    // Serial.print('\t');
-    // Serial.println(L2);
-    // Serial.println((int32_t)result.xTarget);
-    // }
   }
   while ( sensor_front(1) == 1 && sensor_front(2) == 1 && sensor_front(3) == 1 ) {
     Motor(30, 30);
