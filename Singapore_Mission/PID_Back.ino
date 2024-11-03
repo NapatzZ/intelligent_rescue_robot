@@ -15,8 +15,8 @@ void backward(int BaseSpeed, float Kp, float Ki, float Kd) {
     Motor(leftmotor, rightmotor);
   }
   Motor(-40, -40);
-  delay(30);
-  calibate_back();
+  delay(60);
+  AO();
   delay(200);
 }
 void calibate_back() {

@@ -1,10 +1,12 @@
 void read_color(uint8_t *color_choice) {
+  huskylens.writeAlgorithm(ALGORITHM_COLOR_RECOGNITION);
+  delay(100);
   unsigned long previous = millis();
   while (millis() - previous <= 150) {
     AO();                                                // Stop motors while waiting for color detection
     if (huskylens.requestBlocks()) {                     // Request all blocks from HuskyLens
       if (huskylens.countBlocks() > 0) {                 // Check if there are any detected blocks
-        HUSKYLENSResult result = huskylens.getBlock(0);  // Get the first detected block  
+        HUSKYLENSResult result = huskylens.getBlock(0);  // Get the first detected block
         switch (result.ID) {
           case 1:
             *color_choice = 0;  // Red
@@ -32,7 +34,7 @@ void read_color(uint8_t *color_choice) {
   // Retry logic if no valid color was detected
   if (color_choice == 99) {
     unsigned long previous = millis();
-    while (millis() - previous <= 200) {
+    while (millis() - previous <= 150) {
       AO();  // Stop motors again while retrying color detection
       if (huskylens.requestBlocks()) {
         if (huskylens.countBlocks() > 0) {
