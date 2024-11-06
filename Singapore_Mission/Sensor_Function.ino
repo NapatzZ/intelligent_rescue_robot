@@ -66,7 +66,16 @@ int Position_back() {
 }
 
 int in_range(int i) {
-  if (analog(i) >= green[i] - 300 && analog(i) <= green[i] + 300){
+  if (analog(i) >= green[i] - 720 && analog(i) <= green[i] + 720){
+    return 1;
+  }
+  else{
+    return 0;
+  }
+}
+
+int in_rangeR(int x) {
+  if (analog(x) >= red[x] - 300 && analog(x) <= red[x] + 300){
     return 1;
   }
   else{

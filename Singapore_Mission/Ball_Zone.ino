@@ -376,7 +376,7 @@ void path_calculation(Point start, Point destination, int servo_angle) {
       servo(2, SERVO_KEEP);
     }
     forward_millis(35, KP_F, KI_F, KD_F, 260);
-    forward_ultra(20, 0.7, KI_F, 0.8);
+    forward_ultra(18, 0.7, KI_F, 1.2);
     if (servo_angle == -1) {
       servo(1, SERVO_DOWN);
       delay(500);
@@ -389,10 +389,7 @@ void path_calculation(Point start, Point destination, int servo_angle) {
       sound(3000, 500);
       AO();
     } else {
-      calibate_IR();
       delay(200);
-      calibate();
-      delay(100);
       AO();
       servo(1, SERVO_DOWN);
       delay(500);
