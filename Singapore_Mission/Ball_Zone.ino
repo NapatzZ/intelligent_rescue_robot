@@ -380,7 +380,7 @@ void path_calculation(Point start, Point destination, int servo_angle) {
     if (servo_angle == -1) {
       servo(1, SERVO_DOWN);
       delay(500);
-      read_color(&color);
+      read_color(destination.x,destination.y, &color);
        delay(200);
       servo(2, SERVO_KEEP);
       AO();
@@ -430,9 +430,9 @@ void execute() {
     visited_pickups[closest_pickup_index] = 1;
     AO();
     return_to_before_position();
-    // oled.textSize(1);
-    // oled.text(0, 0, "%d   ", color);
-    // oled.show();
+    oled.textSize(1);
+    oled.text(0, 0, "%d   ", color);
+    oled.show();
     path_calculation(current_position, dropoff_zones[color].dropoff_location, dropoff_zones[color].servo_angle);
     current_position = dropoff_zones[color].dropoff_location;
     return_to_before_position();

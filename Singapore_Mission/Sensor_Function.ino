@@ -73,7 +73,6 @@ int in_range(int i) {
     return 0;
   }
 }
-
 int in_rangeR(int x) {
   if (analog(x) >= red[x] - 300 && analog(x) <= red[x] + 300){
     return 1;
